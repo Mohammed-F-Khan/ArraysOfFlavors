@@ -125,7 +125,7 @@ public class Order { // This represents one customer's complete order
             if(it instanceof com.pluralsight.model.IceCreamItem){
                 // casts it to IceCremitem so we can call ice cream methods
                 com.pluralsight.model.IceCreamItem ic = (com.pluralsight.model.IceCreamItem) it;
-                text = text + " -> " +  ic.details() + "\n" // adds the details line
+                text = text + " -> " +  ic.details() + "\n"; // adds the details line
             }
         }
         return text; // finally returns all the details.

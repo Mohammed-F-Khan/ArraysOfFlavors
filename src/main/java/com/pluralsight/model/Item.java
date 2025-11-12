@@ -14,5 +14,6 @@ public class Item { // its like a general thing that can be put on an order
     public String getName(){ return name; } // gives back the name when asked
     public String getSize(){ return size; } // give back the size when asked
     public double getTotal() { return basePrice; } // basic items just return base price
-    public String toString() { return name + " (" + size + ")"; } // example "Ice cream - Vanilla (medium)
+    public String toString() { return name + " (" + size + ")";
+    }
 }
