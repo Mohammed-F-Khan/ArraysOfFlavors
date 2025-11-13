@@ -1,133 +1,228 @@
 package com.pluralsight.model;
 
+
+
 import java.util.ArrayList;
 
-public class Order { // This represents one customer's complete order
+// This class represents a complete order with multiple items, drinks, and sides
+public class Order {
 
-    // Three separate lists for the three types of products
-    ArrayList<Item> items  = new ArrayList<Item>();   // Ice cream items
-    ArrayList<Drink> drinks = new ArrayList<Drink>(); // Drinks
-    ArrayList<Side> sides  = new ArrayList<Side>();   // Sides
+    // variables - collections to store all parts of the order
+    ArrayList<Item> items;      // List to hold all ice cream items
+    ArrayList<Drink> drinks;    // List to hold all drinks
+    ArrayList<Side> sides;      // List to hold all sides
+    String discountCode;        // The coupon code (null if no discount)
+    double discountPercent;     // The discount percentage (0.0 to 1.0, e.g., 0.10 = 10% off)
 
-    // discount tracking
-    String discountCode = null;
-    double discountPercent = 0.0; // The discount amount (0.10 = 10% off)
+    // Constructor - creates a new empty order
+    // Takes in: nothing
+    public Order() {
+        // all ArrayLists as empty lists
+        items = new ArrayList<Item>();      // Create empty list for items
+        drinks = new ArrayList<Drink>();    // Create empty list for drinks
+        sides = new ArrayList<Side>();      // Create empty list for sides
 
-    // Adds items to the order
-    public void addItem(Item i){ items.add(i); }
-    public void addDrink(Drink d){ drinks.add(d); }
-    public void addSide(Side s){ sides.add(s); }
-
-    // set a discount code and a percentage
-    public void setDiscount(String code, double percent){
-        discountCode = code; // remembers the code
-        discountPercent = percent; // remebers the percentage
+        // change discount fields to "no discount"
+        discountCode = null;        // No code yet
+        discountPercent = 0.0;      // 0% discount
     }
 
-    // Checks if order has no items
-    public boolean hasNoItems(){
-        return items.isEmpty(); // isEmpty() returns true if list has 0 elements
+    // Method to add an ice cream item to the order
+    public void addItem(Item i) {
+        // add() method to append the item to the end of the list
+        items.add(i);
     }
 
-    // Check if order has at least one drink or side
-    public boolean hasDrinkOrSide(){
-        return !drinks.isEmpty() || !sides.isEmpty(); //
+    // Method to add a drink to the order
+    public void addDrink(Drink d) {
+        // add() method to append the drink to the end of the list
+        drinks.add(d);
     }
 
-    // Calculate subtotal (before discount)
-    public double getSubtotal(){
-        double t = 0.0; // Starts at zero
-        int i; // Loop counter
-
-        // Add up all item prices
-        for(i=0; i<items.size(); i++)
-            t += items.get(i).getTotal(); // += basically means "add to"
-
-        // Adds up all drink prices
-        for(i=0; i<drinks.size(); i++)
-            t += drinks.get(i).getTotal();
-
-        // Adds up all side prices
-        for(i=0; i<sides.size(); i++)
-            t += sides.get(i).getTotal();
-
-        return t; // Return the final sum
+    // Method to add a side to the order
+    public void addSide(Side s) {
+        // add() method to append the side to the end of the list
+        sides.add(s);
     }
 
-    // this formats a dollar amount nicely (its a private helper method)
-    private String money(double v){
-        long cents = Math.round(v * 100.0); // Converts to cents (avoids decimal errors)
-        long dollars = cents / 100;          // Get dollar part
-        long rem = cents % 100;              // Get cents part (remainder)
+    // Method to apply a discount code to the order
+    // Takes in: code (String) and percent (e.g., 0.15 for 15% off)
+    public void setDiscount(String code, double percent) {
+        // Stores the discount code
+        discountCode = code;
+        // Stores the discount percentage
+        discountPercent = percent;
+    }
 
-        String remStr = "" + rem;            // Convert cents to string
-        if(rem < 10){
-            remStr = "0" + rem;              // Add leading zero if needed (09 not 9)
+    // Method to check if order has no ice cream items
+    // Returns: boolean (true if items list is empty, false otherwise)
+    public boolean hasNoItems() {
+        // isEmpty() returns true if the ArrayList has 0 elements
+        return items.isEmpty();
+    }
+
+    // Method to check if order has at least one drink or side
+    // This is used to enforce the rule: if no ice cream, must have drink/side
+    // Returns: true if there's at least one drink or side)
+    public boolean hasDrinkOrSide() {
+        // Uses ! to flip the result
+        // If drinks is NOT empty OR sides is NOT empty, returns true
+        return !drinks.isEmpty() || !sides.isEmpty();
+    }
+
+    // Method to calculate the subtotal (before discount)
+    // Returns: (the subtotal price)
+    public double getSubtotal() {
+        // Starts with 0
+        double total = 0.0;
+
+        // the loop counter
+        int i;
+
+        // Loop through all ice cream items and add their totals
+        for (i = 0; i < items.size(); i++) {
+            // get(i) returns the item at index i
+            // getTotal() returns the price of that item
+            // Add it to the running total
+            total = total + items.get(i).getTotal();
         }
 
-        return dollars + "." + remStr;       // Combine: like this "5.09"
+        // Loop through all drinks and add their totals
+        for (i = 0; i < drinks.size(); i++) {
+            total = total + drinks.get(i).getTotal();
+        }
+
+        // Loop through all sides and add their totals
+        for (i = 0; i < sides.size(); i++) {
+            total = total + sides.get(i).getTotal();
+        }
+
+        // Returns the complete subtotal
+        return total;
     }
 
-    // calculate discount amount in dollars
-    public double getDiscountAmount(){
-        return getSubtotal() * discountPercent; // multiply subtotal by percent
+    // Method to calculate the discount amount in dollars
+    // Returns: (the discount amount)
+    public double getDiscountAmount() {
+        // Multiply subtotal by discount percentage
+        // Example: subtotal=$20, discountPercent=0.10 -> returns $2.00
+        return getSubtotal() * discountPercent;
     }
 
-    // Calculate final total (after discount)
-    public double getTotal(){
-        return getSubtotal() - getDiscountAmount(); // Subtract discount from subtotal
+    // Method to calculate the final total (after discount)
+    // Returns: (the final total)
+    public double getTotal() {
+        // Subtract discount amount from subtotal
+        return getSubtotal() - getDiscountAmount();
     }
 
-    // Create a summary text showing all items
-    public String summary(){
-        String text = ""; // start with empty string
-        int i; // Loop counter
+    // Private helper method to format a dollar amount as a string
+    private String money(double value) {
+        // Multiply by 100 and round to get total cents
+        // Math.round() rounds to nearest whole number
+        // Example: 5.567 * 100 = 556.7 -> rounds to 557 cents
+        long cents = Math.round(value * 100.0);
 
-        // Loop through items Backwards so (newest comes first)
-        for(i=items.size()-1; i>=0; i--){ // Start at last index, go down to 0
+        // Divide by 100 to get dollar part
+        // Example: 557 / 100 = 5 dollars
+        long dollars = cents / 100;
+
+        // (%) to get remainder (cents part)
+        // Example: 557 % 100 = 57 cents
+        long remainder = cents % 100;
+
+        // Converts remainder to string
+        String remainderString = "" + remainder;
+
+        // If remainder is less than 10, this adds leading zero
+        // Example: 5 becomes "05" so we get "5.05" not "5.5"
+        if (remainder < 10) {
+            remainderString = "0" + remainder;
+        }
+
+        // Concatenate dollars, decimal point, and cents
+        // Example: "5" + "." + "57" = "5.57"
+        return dollars + "." + remainderString;
+    }
+
+    // Method to create a summary string for the order
+    // This is used in receipts and checkout screens
+    // Returns: String (formatted order summary)
+    public String summary() {
+        // Starts with empty string
+        String text = "";
+
+        // Declare loop counter
+        int i;
+
+        // Loop through items BACKWARDS (newest first)
+        // We start at the last index (size() - 1) and go down to 0
+        // This shows items in reverse order (most recent at top)
+        for (i = items.size() - 1; i >= 0; i--) {
+            // Gets the item at this index
             Item it = items.get(i);
+
+            // Builds a line showing: "ITEM  " + name + " $" + price + newline
+            // Example: "ITEM  Ice Cream - Vanilla - Cup (Small) $3.50\n"
             text = text + "ITEM  " + it.toString() + " $" + money(it.getTotal()) + "\n";
         }
 
-        // Loop through drinks BACKWARDS
-        for(i=drinks.size()-1; i>=0; i--){
+        // Loops through drinks backwards
+        for (i = drinks.size() - 1; i >= 0; i--) {
             Drink d = drinks.get(i);
+            // Build line for drink
             text = text + "DRINK " + d.toString() + " $" + money(d.getTotal()) + "\n";
         }
 
-        // Loop through sides BACKWARDS
-        for(i=sides.size()-1; i>=0; i--){
+        // Loops through sides backwards
+        for (i = sides.size() - 1; i >= 0; i--) {
             Side s = sides.get(i);
+            // Build line for side
             text = text + "SIDE  " + s.toString() + " $" + money(s.getTotal()) + "\n";
         }
 
-        // Adds discount line if there is one
-        if(discountCode != null){
+        // If there's a discount code, this adds discount line
+        if (discountCode != null) {
+            // Shows discount with negative amount
+            // Example: "DISCOUNT (AF-10-OFF) -$2.00\n"
             text = text + "DISCOUNT (" + discountCode + ") -$" + money(getDiscountAmount()) + "\n";
         }
 
-        // Adds total line
+        // Adds final total line
         text = text + "TOTAL: $" + money(getTotal()) + "\n";
 
-        return text; // Returns the complete summary
+        // Return the complete summary
+        return text;
     }
 
-    // detailed toppings block for ice cream items
-    public String detailsBlock(){
-        String text = ""; // Starts empty
+    // Method to create a detailed block showing toppings for each item
+    // This is used in receipts to show customization details
+    // Returns: (formatted details)
+    public String detailsBlock() {
+        // Start with empty string
+        String text = "";
+
+        // loop counter
         int i;
 
-        // loop through items backwards
-        for(i = items.size() - 1; i >= 0; i--){
+        // Loop through items backwards
+        for (i = items.size() - 1; i >= 0; i--) {
+            // Gets the item
             Item it = items.get(i);
 
-            // this checks if this item is actually and IceCreamItem (USING INSTANCEOF)
-            if(it instanceof com.pluralsight.model.IceCreamItem){
-                // casts it to IceCremitem so we can call ice cream methods
-                com.pluralsight.model.IceCreamItem ic = (com.pluralsight.model.IceCreamItem) it;
-                text = text + " -> " +  ic.details() + "\n"; // adds the details line
+            // Check if this item is an IceCreamItem (using instanceof)
+            // instanceof returns true if the object is of the specified type
+            if (it instanceof IceCreamItem) {
+                // (convert) the Item to IceCreamItem so we can call details()
+                // This is safe because we checked with instanceof first
+                IceCreamItem ic = (IceCreamItem) it;
+
+                // Adds the detailed info with " -> " prefix
+                text = text + " -> " + ic.details() + "\n";
             }
         }
-        return text; // finally returns all the details.
+
+        // Return the complete details block
+        return text;
     }
 }

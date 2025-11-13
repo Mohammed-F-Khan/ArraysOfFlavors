@@ -1,0 +1,8 @@
+Arrays of Flavors - Receipt
+Order time: 20251113-160525
+
+ITEM  Ice Cream - Classic Vanilla Loop - Cup (Small) $12.00
+DRINK Drink - Soda (Small) $2.00
+DRINK Drink - Soda (Small) $2.00
+TOTAL: $16.00
+ -> Classic Vanilla Loop [Cup] Regular=[crushed cookies, brownie bits, mini marshmallows, coconut flakes, chocolate chips, cherries, candy pieces], Premium={cheesecake bites=1, fudge sauce=1}, Sauces={hot fudge=1, cookie butter=1, espresso drizzle=1, salted caramel=1}, Condiments=[Chocolate Syrup, Strawberry Sauce, Caramel Drizzle, Marshmallow Cream, Honey Drizzle], Special=true

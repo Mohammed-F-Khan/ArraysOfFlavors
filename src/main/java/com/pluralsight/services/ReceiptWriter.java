@@ -1,45 +1,69 @@
 package com.pluralsight.services;
 
+// Import Order class so we can save order information
 import com.pluralsight.model.Order;
-import java.io.BufferedWriter;  // For writing to files efficiently
-import java.io.FileWriter;      // For creating file connections
-import java.time.LocalDateTime; // For getting current date/time
-import java.time.format.DateTimeFormatter; // For formatting dates
+// Import BufferedWriter - efficient way to write text to files
+import java.io.BufferedWriter;
+// Import FileWriter - writes to files
+import java.io.FileWriter;
+// Import IOException - handles file errors
+import java.io.IOException;
+// Import LocalDateTime - gets current date and time
+import java.time.LocalDateTime;
+// Import DateTimeFormatter - formats date and time as strings
+import java.time.format.DateTimeFormatter;
 
-public class ReceiptWriter { // Service that writes the receipt files
+// This class writes receipts to text files
+public class ReceiptWriter {
 
-    // Static method - can call without creating a ReceiptWriter object
-    public static String write(Order order){
-        try { // to catch if anything goes wrong
+    // Static method to write an order to a receipt file
+    public static String write(Order order) {
+        // Try-catch block - handles  file writing errors
+        try {
+            // formatter to format date/time as "yyyyMMdd-HHmmss"
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
 
-            // creates a date formatter for the filename
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
+            // Get current date and time
+            // format() converts it to a string using our formatter
+            String timestamp = LocalDateTime.now().format(formatter);
 
-            // Gets current time and format it
-            String stamp = LocalDateTime.now().format(fmt);
+            // Build the file path: data/receipts/[timestamp].txt
+            String filePath = "data/receipts/" + timestamp + ".txt";
 
-            // builds the file path
-            String path = "data/receipts/" + stamp + ".txt";
+            // Create FileWriter object - opens the file for writing
+            // This creates the file if it doesn't exist
+            FileWriter fileWriter = new FileWriter(filePath);
 
-            // Creates a writer to be able to write to the file
-            BufferedWriter bw = new BufferedWriter(new FileWriter(path));
+            // BufferedWriter writes text in chunks instead of one character at a time
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-            // Writes the Receipt header
-            bw.write("Arrays of Flavors - Receipt\n");
-            bw.write("Order time: " + stamp + "\n\n");
+            // Writes the header line
+            bufferedWriter.write("Arrays of Flavors - Receipt\n");
 
-            // Write order summary and details
-            bw.write(order.summary()); // items and the totals
-            bw.write(order.detailsBlock()); // toppings details
+            // Writes the order time
+            bufferedWriter.write("Order time: " + timestamp + "\n\n");
 
-            // closes the file
-            bw.close();
+            // Writes the order summary (all items, prices, total)
+            bufferedWriter.write(order.summary());
 
-            return path; // this returns the file path so we can tell the user!
+            // Writes the detailed toppings information
+            bufferedWriter.write(order.detailsBlock());
 
-    } catch(Exception e){ // if anything goes wrong above
-        e.printStackTrace(); // prints the error.
-        return null; // returns null to indicate that there was a failure
+            // IMPORTANT: Close the BufferedWriter to save the file
+            bufferedWriter.close();
+
+            // Returns the file path so we can tell the user where it was saved
+            return filePath;
+
+        } catch (IOException e) {
+            // If there's an error print error message
+            System.out.println("ERROR: Could not write receipt");
+
+            // Prints the detailed error information
+            e.printStackTrace();
+
+            // Return null to indicate failure
+            return null;
         }
     }
 }

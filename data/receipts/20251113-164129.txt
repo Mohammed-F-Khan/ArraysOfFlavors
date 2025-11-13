@@ -1,0 +1,10 @@
+Arrays of Flavors - Receipt
+Order time: 20251113-164129
+
+ITEM  Ice Cream - Margarita - Sundae Dish (Large) $18.50
+ITEM  Ice Cream - Strawberry Shortcode - Sundae Dish (Large) $39.25
+DRINK Drink - Soda (Small) $2.00
+SIDE  Side - Mini Waffle Bites (Small) $3.00
+TOTAL: $62.75
+ -> Margarita [Sundae Dish] Regular=[], Premium={brownie chunks=1}, Sauces={fudge sauce=1}, Condiments=[Chocolate Syrup], Special=true
+ -> Strawberry Shortcode [Sundae Dish] Regular=[sprinkles, mini marshmallows, coconut flakes, chocolate chips, cherries, candy pieces], Premium={brownie chunks=1, cookie dough bites=1, cheesecake bites=1, peanut butter cups=1, fudge sauce=1, caramel swirl=1}, Sauces={hot fudge=1, cookie butter=1, espresso drizzle=1, salted caramel=1}, Condiments=[Chocolate Syrup, Strawberry Sauce, Caramel Drizzle, Marshmallow Cream, Honey Drizzle], Special=true
