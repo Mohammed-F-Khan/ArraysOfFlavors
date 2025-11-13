@@ -24,7 +24,7 @@ public class IceCreamItem extends Item { // Ice cream is an item
     boolean specialApplied = false;
 
     // Constructor to create a new ice cream item
-    public Item(String baseFlavor, String type, String size){
+    public IceCreamItem(String baseFlavor, String type, String size){
         // calls the parent (item) constructor using super
         super("Ice Cream - " + baseFlavor + " - " + type, size,
                 Pricing.getBasePrice(baseFlavor, size)); // gets price from Pricing
