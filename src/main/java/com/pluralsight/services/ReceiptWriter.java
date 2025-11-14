@@ -37,32 +37,59 @@ public class ReceiptWriter {
             // BufferedWriter writes text in chunks instead of one character at a time
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-            // Writes the header line
-            bufferedWriter.write("Arrays of Flavors - Receipt\n");
+            bufferedWriter.write("╔════════════════════════════════════════════════════════════════╗\n");
+            bufferedWriter.write("║                                                                ║\n");
+            bufferedWriter.write("║                    ARRAYS OF FLAVORS                           ║\n");
+            bufferedWriter.write("║              Where Every Scoop Tells a Story                   ║\n");
+            bufferedWriter.write("║                                                                ║\n");
+            bufferedWriter.write("╚════════════════════════════════════════════════════════════════╝\n");
+            bufferedWriter.write("\n");
 
-            // Writes the order time
-            bufferedWriter.write("Order time: " + timestamp + "\n\n");
+            // Write order time
+            bufferedWriter.write("Order Date/Time: " + timestamp + "\n");
+            bufferedWriter.write("\n");
 
-            // Writes the order summary (all items, prices, total)
+            // Write divider
+            bufferedWriter.write("================================================================\n");
+            bufferedWriter.write("                        ORDER SUMMARY                            \n");
+            bufferedWriter.write("================================================================\n");
+            bufferedWriter.write("\n");
+
+            // Write the order summary (all items, prices, total)
             bufferedWriter.write(order.summary());
+            bufferedWriter.write("\n");
 
-            // Writes the detailed toppings information
-            bufferedWriter.write(order.detailsBlock());
+            // Write detailed toppings information
+            String details = order.detailsBlock();
+            if (details.length() > 0) {
+                bufferedWriter.write("----------------------------------------------------------------\n");
+                bufferedWriter.write("                      ITEM DETAILS                              \n");
+                bufferedWriter.write("----------------------------------------------------------------\n");
+                bufferedWriter.write("\n");
+                bufferedWriter.write(order.detailsBlock());
+                bufferedWriter.write("\n");
+            }
 
-            // IMPORTANT: Close the BufferedWriter to save the file
+            // Write footer
+            bufferedWriter.write("================================================================\n");
+            bufferedWriter.write("           Thank you for visiting Arrays of Flavors!            \n");
+            bufferedWriter.write("                    Have a sweet day! 🍦                        \n");
+            bufferedWriter.write("================================================================\n");
+
+            // Close the writer to save the file
             bufferedWriter.close();
 
-            // Returns the file path so we can tell the user where it was saved
+            // Returns the file path
             return filePath;
 
         } catch (IOException e) {
-            // If there's an error print error message
+            // If there's an error, print error message
             System.out.println("ERROR: Could not write receipt");
 
-            // Prints the detailed error information
+            // Print detailed error information
             e.printStackTrace();
 
-            // Return null to indicate failure
+            // Return null for failure
             return null;
         }
     }

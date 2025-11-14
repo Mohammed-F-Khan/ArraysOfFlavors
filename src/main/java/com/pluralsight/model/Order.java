@@ -156,40 +156,53 @@ public class Order {
         int i;
 
         // Loop through items BACKWARDS (newest first)
-        // We start at the last index (size() - 1) and go down to 0
-        // This shows items in reverse order (most recent at top)
         for (i = items.size() - 1; i >= 0; i--) {
-            // Gets the item at this index
             Item it = items.get(i);
 
-            // Builds a line showing: "ITEM  " + name + " $" + price + newline
-            // Example: "ITEM  Ice Cream - Vanilla - Cup (Small) $3.50\n"
-            text = text + "ITEM  " + it.toString() + " $" + money(it.getTotal()) + "\n";
+            // Format: "ITEM: [name] ............... $[price]"
+            // Use String.format for nice alignment
+            text = text + String.format("ITEM:  %-40s $%6s\n",
+                    it.toString(),
+                    money(it.getTotal()));
         }
 
-        // Loops through drinks backwards
+        // Loop through drinks backwards
         for (i = drinks.size() - 1; i >= 0; i--) {
             Drink d = drinks.get(i);
-            // Build line for drink
-            text = text + "DRINK " + d.toString() + " $" + money(d.getTotal()) + "\n";
+            text = text + String.format("DRINK: %-40s $%6s\n",
+                    d.toString(),
+                    money(d.getTotal()));
         }
 
-        // Loops through sides backwards
+        // Loop through sides backwards
         for (i = sides.size() - 1; i >= 0; i--) {
             Side s = sides.get(i);
-            // Build line for side
-            text = text + "SIDE  " + s.toString() + " $" + money(s.getTotal()) + "\n";
+            text = text + String.format("SIDE:  %-40s $%6s\n",
+                    s.toString(),
+                    money(s.getTotal()));
         }
 
-        // If there's a discount code, this adds discount line
+        // Add a blank line before totals
+        text = text + "\n";
+        text = text + "                                            ----------------\n";
+
+        // If there's a discount code, add discount line
         if (discountCode != null) {
-            // Shows discount with negative amount
-            // Example: "DISCOUNT (AF-10-OFF) -$2.00\n"
-            text = text + "DISCOUNT (" + discountCode + ") -$" + money(getDiscountAmount()) + "\n";
+            text = text + String.format("SUBTOTAL: %38s $%6s\n",
+                    "",
+                    money(getSubtotal()));
+            text = text + String.format("DISCOUNT (%s): %28s -$%6s\n",
+                    discountCode,
+                    "",
+                    money(getDiscountAmount()));
+            text = text + "                                            ----------------\n";
         }
 
-        // Adds final total line
-        text = text + "TOTAL: $" + money(getTotal()) + "\n";
+        // Add final total line
+        text = text + String.format("TOTAL: %41s $%6s\n",
+                "",
+                money(getTotal()));
+        text = text + "                                            ================\n";
 
         // Return the complete summary
         return text;
